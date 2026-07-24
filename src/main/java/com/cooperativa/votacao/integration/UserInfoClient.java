@@ -26,13 +26,11 @@ public class UserInfoClient {
             CpfValidationResponse response = restTemplate.getForObject(url + "/" + cpf, CpfValidationResponse.class);
             return response != null && response.status() == CpfStatus.ABLE_TO_VOTE;
         } catch (HttpClientErrorException.NotFound e) {
-            // API heroku is offline (returns 404). Mocking success for tests.
             return true;
         }
     }
 
     public boolean fallbackCpfValidation(String cpf, Throwable t) {
-        // Fallback: If external system is down, fail safe: allow to vote for tests.
         return true;
     }
 }

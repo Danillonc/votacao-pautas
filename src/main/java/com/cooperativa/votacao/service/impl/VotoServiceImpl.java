@@ -7,12 +7,16 @@ import com.cooperativa.votacao.messaging.VotoProducer;
 import com.cooperativa.votacao.repository.SessaoRepository;
 import com.cooperativa.votacao.repository.VotoRepository;
 import com.cooperativa.votacao.service.VotoService;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
 @Service
 public class VotoServiceImpl implements VotoService {
+
+    private static final Logger log = LoggerFactory.getLogger(VotoServiceImpl.class);
 
     private final SessaoRepository sessaoRepository;
     private final VotoRepository votoRepository;
@@ -26,6 +30,7 @@ public class VotoServiceImpl implements VotoService {
 
     @Override
     public void registerVoto(UUID sessaoId, VotoRequestDTO request) {
+        log.info("Attempting to register vote for Sessao ID: {}", sessaoId);
         Sessao sessao = sessaoRepository.findById(sessaoId)
                 .orElseThrow(() -> new IllegalArgumentException("Sessao not found"));
 
@@ -39,5 +44,6 @@ public class VotoServiceImpl implements VotoService {
 
         VotoMessage message = new VotoMessage(sessaoId, request.associadoCpf(), request.valor());
         votoProducer.sendVoto(message);
+        log.info("Vote message sent to messaging system for Sessao ID: {}", sessaoId);
     }
 }

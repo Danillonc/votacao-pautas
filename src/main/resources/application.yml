@@ -34,7 +34,9 @@ spring:
 app:
   integration:
     user-info:
-      url: https://user-info.herokuapp.com/users
+      # A URL de callback/integração para validar o CPF. 
+      # Pode ser sobrescrita em qualquer ambiente injetando a variável APP_INTEGRATION_USER_INFO_URL
+      url: ${APP_INTEGRATION_USER_INFO_URL:https://user-info.herokuapp.com/users}
 
 resilience4j:
   circuitbreaker:
